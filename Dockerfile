@@ -13,7 +13,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 #Copia o .jar gerado com o maven para um novo container limpo
-COPY --from-build /app/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 #Expõe a porta padrão do Spring Boot
 EXPOSE 8080
