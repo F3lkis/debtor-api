@@ -1,5 +1,6 @@
 package com.finance.debtor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class User {
     private String password;
 
 //    Atribuindo banco de gastos ao usuário:
+    @JsonIgnore
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Data_Bank> dataBanks = new ArrayList<>();
 

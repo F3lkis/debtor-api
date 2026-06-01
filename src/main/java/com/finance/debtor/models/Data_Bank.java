@@ -54,7 +54,7 @@ public class Data_Bank {
         return ProductId;
     }
     public void setProductId(long id){
-        this.ProductId = ProductId;
+        this.ProductId = id;
     }
 
     public String getItemBought(){

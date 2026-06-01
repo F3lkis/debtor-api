@@ -13,13 +13,13 @@ import java.util.List;
 @RestController
 public class ApiControllers {
 
-//    Login Controllers
+//  Login
     @Autowired
     private UserRepo userRepo;
 
     @GetMapping(value = "/")
     public String getPage() {
-        return "Welcome";
+        return "Welcome to Debtor API";
     }
 
     @GetMapping(value = "/users")
@@ -33,9 +33,10 @@ public class ApiControllers {
         return "Saved ...";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PutMapping(value = "/update/{id}")
     public String updateUser(@PathVariable long id, @RequestBody User user) {
-        User updatedUser = userRepo.findById(id).get();
+        User updatedUser = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + id));
 
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setLastName(user.getLastName());
@@ -43,37 +44,50 @@ public class ApiControllers {
         updatedUser.setPassword(user.getPassword());
 
         userRepo.save(updatedUser);
-
         return "Updated...";
     }
 
     @DeleteMapping(value = "/delete/{id}")
     public String deleteUser(@PathVariable long id){
-        User deleteUser = userRepo.findById(id).get();
+        User deleteUser = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + id));
         userRepo.delete(deleteUser);
         return "User(id): " + id + " Deleted...";
     }
 
-
-//    Application Controllers
-
+//  Application Controllers
     @Autowired
     private DataBankRepo dataBankRepo;
 
+    // Busca todos os gastos no sistema (Visão de Admin)
     @GetMapping(value = "/bank")
     public List<Data_Bank> getBank(){
         return dataBankRepo.findAll();
     }
 
-    @PostMapping(value = "/saveBank")
-    public String saveBank(@RequestBody Data_Bank dataBank){
+    // Busca apenas os gastos de um usuário específico
+    @GetMapping(value = "/bank/user/{userId}")
+    public List<Data_Bank> getBankByUser(@PathVariable long userId){
+        return dataBankRepo.findByUserId(userId);
+    }
+
+    // Salva um gasto amarrando-o ao ID do usuário
+    @PostMapping(value = "/saveBank/user/{userId}")
+    public String saveBank(@PathVariable long userId, @RequestBody Data_Bank dataBank){
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + userId));
+
+        // Relaciona o dono deste gasto antes de salvar no banco
+        dataBank.setUser(user);
         dataBankRepo.save(dataBank);
+
         return "Bank Saved";
     }
 
     @PutMapping(value = "/updateBank/{ProductId}")
     public String updateBank(@PathVariable long ProductId, @RequestBody Data_Bank dataBank){
-        Data_Bank updateDataBank = dataBankRepo.findById(ProductId).get();
+        Data_Bank updateDataBank = dataBankRepo.findById(ProductId)
+                .orElseThrow(() -> new RuntimeException("Registro não encontrado. ID: " + ProductId));
 
         updateDataBank.setItemBought(dataBank.getItemBought());
         updateDataBank.setPrice(dataBank.getPrice());
@@ -82,16 +96,15 @@ public class ApiControllers {
         updateDataBank.setPaymentMethod(dataBank.getPaymentMethod());
 
         dataBankRepo.save(updateDataBank);
-
         return "Bank Updated...";
     }
 
-    @DeleteMapping(value = "/deleteBank/{id}")
+    @DeleteMapping(value = "/deleteBank/{ProductId}")
     public String deleteBank(@PathVariable long ProductId){
-        Data_Bank deleteDataBank = dataBankRepo.findById(ProductId).get();
+        Data_Bank deleteDataBank = dataBankRepo.findById(ProductId)
+                .orElseThrow(() -> new RuntimeException("Registro não encontrado. ID: " + ProductId));
+
         dataBankRepo.delete(deleteDataBank);
-        return "User(id): " + ProductId + " Deleted...";
+        return "Bank(id): " + ProductId + " Deleted...";
     }
-
 }
-
