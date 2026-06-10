@@ -1,9 +1,11 @@
 package com.finance.debtor.controller;
 
+import com.finance.debtor.dto.DataBankDTO;
 import com.finance.debtor.models.Data_Bank;
 import com.finance.debtor.models.User;
 import com.finance.debtor.repo.DataBankRepo;
 import com.finance.debtor.repo.UserRepo;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +15,16 @@ import java.util.List;
 @RestController
 public class ApiControllers {
 
-//  Login
-    @Autowired
-    private UserRepo userRepo;
+//  dependencies constructor
+    private final UserRepo userRepo;
+    private final DataBankRepo dataBankRepo;
 
+    public ApiControllers(UserRepo userRepo, DataBankRepo dataBankRepo){
+        this.userRepo = userRepo;
+        this.dataBankRepo = dataBankRepo;
+    }
+
+//  Login
     @GetMapping(value = "/")
     public String getPage() {
         return "Welcome to Debtor API";
@@ -56,9 +64,6 @@ public class ApiControllers {
     }
 
 //  Application Controllers
-    @Autowired
-    private DataBankRepo dataBankRepo;
-
     // Busca todos os gastos no sistema (Visão de Admin)
     @GetMapping(value = "/bank")
     public List<Data_Bank> getBank(){
@@ -73,14 +78,20 @@ public class ApiControllers {
 
     // Salva um gasto amarrando-o ao ID do usuário
     @PostMapping(value = "/saveBank/user/{userId}")
-    public String saveBank(@PathVariable long userId, @RequestBody Data_Bank dataBank){
+    public String saveBank(@PathVariable long userId,@Valid @RequestBody DataBankDTO dto){
         User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + userId));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
-        // Relaciona o dono deste gasto antes de salvar no banco
+        Data_Bank dataBank = new Data_Bank();
+        dataBank.setItemBought(dto.getItemBought());
+        dataBank.setPrice(dto.getPrice());
+        dataBank.setCategory(dto.getCategory());
+        dataBank.setPaymentMethod(dto.getPaymentMethod());
+        dataBank.setDate(dto.getDate());
         dataBank.setUser(user);
-        dataBankRepo.save(dataBank);
 
+//      Salva no banco de dados
+        dataBankRepo.save(dataBank);
         return "Bank Saved";
     }
 

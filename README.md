@@ -59,5 +59,15 @@ The API will be available at: http://localhost:8080
 
 [ ] Develop the Front-end in Next.js/React to consume this API.
 
+## 🚀 Deploy em Produção
+O aplicativo está hospedado utilizando plataformas PaaS modernas. O backend está provisionado na **Render**, consumindo o banco de dados **MySQL hospedado na Aiven**. Variáveis de ambiente foram utilizadas para ocultar credenciais e rotas de conexão.
+- **Link da API**: https://debtor-api-81qs.onrender.com
+- **Interface Gráfica**: https://debtorfront.onrender.com/
 
----
+## 💻 Exemplos de Uso (cURL)
+```bash
+# Adicionar um novo gasto
+curl -X POST [https://debtor-api-81qs.onrender.com/saveBank/user/1](https://debtor-api-81qs.onrender.com/saveBank/user/1) \
+-H "Content-Type: application/json" \
+-d '{"itemBought":"Monitor","price":850.50,"category":"Casa","paymentMethod":"Cartão","date":"2026-06-10"}'
+```
