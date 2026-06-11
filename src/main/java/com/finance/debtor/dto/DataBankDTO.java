@@ -5,20 +5,27 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class DataBankDTO {
+    @Schema(description = "Descrição do item comprado", example = "Café", required = true)
     @NotBlank(message = "A descrição não pode ser vazia")
     private String itemBought;
 
+    @Schema(description = "Preço do item comprado", example = "10.50", required = true)
     @NotNull
     @PositiveOrZero(message = "O valor deve ser positivo")
     private Float price;
 
+    @Schema(description = "Categoria do item comprado", example = "Alimentação", required = true)
     @NotBlank
     private String category;
 
+    @Schema(description = "Método de pagamento", example = "Cartão de Crédito", required = true)
     @NotBlank
     private String paymentMethod;
 
+    @Schema(description = "Data do lançamento", example = "2023-01-01", required = true)
     @NotNull
     private LocalDate date;
 
