@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.finance.debtor.controller.ApiControllers;
-import com.finance.debtor.models.Data_Bank;
-import com.finance.debtor.models.User;
 import com.finance.debtor.services.DataBankService;
 import com.finance.debtor.services.UserService;
 import org.junit.jupiter.api.Test;

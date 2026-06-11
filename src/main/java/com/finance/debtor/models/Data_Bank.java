@@ -1,8 +1,6 @@
 package com.finance.debtor.models;
 
 import jakarta.persistence.*;
-import lombok.Setter;
-
 import java.time.LocalDate;
 
 @Entity
