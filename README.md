@@ -71,3 +71,6 @@ curl -X POST [https://debtor-api-81qs.onrender.com/saveBank/user/1](https://debt
 -H "Content-Type: application/json" \
 -d '{"itemBought":"Monitor","price":850.50,"category":"Casa","paymentMethod":"Cartão","date":"2026-06-10"}'
 ```
+## 📝 Relatório do JaCoCo
+![img.png](img.png)
+

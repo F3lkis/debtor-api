@@ -3,10 +3,9 @@ package com.finance.debtor.controller;
 import com.finance.debtor.dto.DataBankDTO;
 import com.finance.debtor.models.Data_Bank;
 import com.finance.debtor.models.User;
-import com.finance.debtor.repo.DataBankRepo;
-import com.finance.debtor.repo.UserRepo;
+import com.finance.debtor.services.DataBankService;
+import com.finance.debtor.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,107 +14,70 @@ import java.util.List;
 @RestController
 public class ApiControllers {
 
-//  dependencies constructor
-    private final UserRepo userRepo;
-    private final DataBankRepo dataBankRepo;
+    private final DataBankService dataBankService;
+    private final UserService userService;
 
-    public ApiControllers(UserRepo userRepo, DataBankRepo dataBankRepo){
-        this.userRepo = userRepo;
-        this.dataBankRepo = dataBankRepo;
+    // Injeção de dependência via construtor
+    public ApiControllers(DataBankService dataBankService, UserService userService){
+        this.dataBankService = dataBankService;
+        this.userService = userService;
     }
 
-//  Login
     @GetMapping(value = "/")
     public String getPage() {
         return "Welcome to Debtor API";
     }
 
+//  Rotas de Usuário
     @GetMapping(value = "/users")
     public List<User> getUsers() {
-        return userRepo.findAll();
+        return userService.getUsers();
     }
 
     @PostMapping(value = "/save")
     public String saveUser(@RequestBody User user) {
-        userRepo.save(user);
-        return "Saved ...";
+        return userService.saveUser(user);
     }
 
     @PutMapping(value = "/update/{id}")
     public String updateUser(@PathVariable long id, @RequestBody User user) {
-        User updatedUser = userRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + id));
-
-        updatedUser.setFirstName(user.getFirstName());
-        updatedUser.setLastName(user.getLastName());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setPassword(user.getPassword());
-
-        userRepo.save(updatedUser);
-        return "Updated...";
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping(value = "/delete/{id}")
     public String deleteUser(@PathVariable long id){
-        User deleteUser = userRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado. ID: " + id));
-        userRepo.delete(deleteUser);
-        return "User(id): " + id + " Deleted...";
+        return userService.deleteUser(id);
     }
 
-//  Application Controllers
-    // Busca todos os gastos no sistema (Visão de Admin)
+//  Rotas de Gastos
     @GetMapping(value = "/bank")
     public List<Data_Bank> getBank(){
-        return dataBankRepo.findAll();
+        return dataBankService.getAllBank();
     }
 
-    // Busca apenas os gastos de um usuário específico
     @GetMapping(value = "/bank/user/{userId}")
     public List<Data_Bank> getBankByUser(@PathVariable long userId){
-        return dataBankRepo.findByUserId(userId);
+        return dataBankService.getBankByUser(userId);
     }
 
-    // Salva um gasto amarrando-o ao ID do usuário
+    // Rota de Filtro Específico
+    @GetMapping(value = "/bank/category/{category}")
+    public List<Data_Bank> getBankByCategory(@PathVariable String category){
+        return dataBankService.getBankByCategory(category);
+    }
+
     @PostMapping(value = "/saveBank/user/{userId}")
-    public String saveBank(@PathVariable long userId,@Valid @RequestBody DataBankDTO dto){
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-
-        Data_Bank dataBank = new Data_Bank();
-        dataBank.setItemBought(dto.getItemBought());
-        dataBank.setPrice(dto.getPrice());
-        dataBank.setCategory(dto.getCategory());
-        dataBank.setPaymentMethod(dto.getPaymentMethod());
-        dataBank.setDate(dto.getDate());
-        dataBank.setUser(user);
-
-//      Salva no banco de dados
-        dataBankRepo.save(dataBank);
-        return "Bank Saved";
+    public String saveBank(@PathVariable long userId, @Valid @RequestBody DataBankDTO dto) {
+        return dataBankService.saveBankData(userId, dto);
     }
 
     @PutMapping(value = "/updateBank/{ProductId}")
     public String updateBank(@PathVariable long ProductId, @RequestBody Data_Bank dataBank){
-        Data_Bank updateDataBank = dataBankRepo.findById(ProductId)
-                .orElseThrow(() -> new RuntimeException("Registro não encontrado. ID: " + ProductId));
-
-        updateDataBank.setItemBought(dataBank.getItemBought());
-        updateDataBank.setPrice(dataBank.getPrice());
-        updateDataBank.setCategory(dataBank.getCategory());
-        updateDataBank.setDate(dataBank.getDate());
-        updateDataBank.setPaymentMethod(dataBank.getPaymentMethod());
-
-        dataBankRepo.save(updateDataBank);
-        return "Bank Updated...";
+        return dataBankService.updateBankData(ProductId, dataBank);
     }
 
     @DeleteMapping(value = "/deleteBank/{ProductId}")
     public String deleteBank(@PathVariable long ProductId){
-        Data_Bank deleteDataBank = dataBankRepo.findById(ProductId)
-                .orElseThrow(() -> new RuntimeException("Registro não encontrado. ID: " + ProductId));
-
-        dataBankRepo.delete(deleteDataBank);
-        return "Bank(id): " + ProductId + " Deleted...";
+        return dataBankService.deleteBankData(ProductId);
     }
 }
