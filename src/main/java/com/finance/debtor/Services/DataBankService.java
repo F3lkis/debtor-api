@@ -1,4 +1,4 @@
-package com.finance.debtor.DataBankService;
+package com.finance.debtor.Services;
 
 import com.finance.debtor.dto.DataBankDTO;
 import com.finance.debtor.models.Data_Bank;

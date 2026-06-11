@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.finance.debtor.DataBankService.DataBankService;
 import com.finance.debtor.dto.DataBankDTO;
 import com.finance.debtor.models.Data_Bank;
 import com.finance.debtor.models.User;
 import com.finance.debtor.repo.DataBankRepo;
 import com.finance.debtor.repo.UserRepo;
-import com.finance.debtor.services.DataBankService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

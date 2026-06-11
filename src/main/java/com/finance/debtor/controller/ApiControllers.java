@@ -1,9 +1,9 @@
 package com.finance.debtor.controller;
 
+import com.finance.debtor.DataBankService.DataBankService;
 import com.finance.debtor.dto.DataBankDTO;
 import com.finance.debtor.models.Data_Bank;
 import com.finance.debtor.models.User;
-import com.finance.debtor.services.DataBankService;
 import com.finance.debtor.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
