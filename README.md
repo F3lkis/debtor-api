@@ -74,3 +74,11 @@ curl -X POST [https://debtor-api-81qs.onrender.com/saveBank/user/1](https://debt
 ## 📝 Relatório do JaCoCo
 ![img.png](img.png)
 
+## Atribuições
+Felipe Lira - Back-End
+Gérard Mourão - Interface Gráfica
+Jean Mendes - Front-End
+João Lucas - Interface Gráfica
+Eduardo Barreto - Back-End
+Ryan Moreira - Banco de Dados
+Arthur Pereira - Banco de Dados
